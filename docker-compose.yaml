@@ -1,0 +1,42 @@
+version: "3.3"
+
+services:
+  db:
+    # name on hub.docker.com
+    # notice we didn't explicitly specify the container name
+    # therefore the image name will be the container name here
+    # image to fetch from docker hub
+    image: postgres
+#    ports:
+#    - "5432:5432"
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    # Environment variables for startup script
+    # container will use these variables
+    # to start the container with these define variables.
+    environment:
+      - POSTGRES_DB=talentpool
+      - POSTGRES_USER=talentpool
+      - POSTGRES_PASSWORD=talentpool
+    restart: "on-failure"
+  # ensure that all services are on the same line eg db, web, etc
+  web:
+    # This specifies the location of our Dockerfile, and . represents the directory where the docker-compose.yml file is located.
+    build: .
+    command: bash -c "python manage.py makemigrations &&
+                      python manage.py migrate &&
+                      python manage.py runserver 0.0.0.0:8000"
+    # set volumes path to enable persitent changes made in the code
+    # This way, we won’t have to rebuild the images if changes are made.
+    # https://testdriven.io/blog/dockerizing-flask-with-postgres-gunicorn-and-nginx/
+    volumes:
+      - .:/talentpool
+    # Mapping of container port to host
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./.env.dev
+    # Also Links database container to app container
+    # for reachability.
+    depends_on:
+      - db
