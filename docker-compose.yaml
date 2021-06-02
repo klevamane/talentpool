@@ -7,8 +7,8 @@ services:
     # therefore the image name will be the container name here
     # image to fetch from docker hub
     image: postgres
-#    ports:
-#    - "5432:5432"
+    ports:
+    - "5432:5432"
     volumes:
       - ./data/db:/var/lib/postgresql/data
     # Environment variables for startup script

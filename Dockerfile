@@ -8,12 +8,15 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 RUN useradd -m talentpooluser
 USER talentpooluser
+# this will be the working directory
+# and it creates the folder if it doesn't exist
 WORKDIR /talentpool
+#COPY requirements.txt /talentpool/
 COPY requirements.txt /talentpool/
 RUN pip install -r requirements.txt
 COPY . /talentpool/
 # copy entrypoint.sh
-COPY ./entrypoint.sh /talentpool/
+#COPY ./entrypoint.sh /talentpool/
 
 # run entrypoint.sh
-ENTRYPOINT ["/talentpool/entrypoint.sh"]
+#ENTRYPOINT ["/talentpool/entrypoint.sh"]
